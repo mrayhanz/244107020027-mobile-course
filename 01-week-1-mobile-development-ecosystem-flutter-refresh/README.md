@@ -36,7 +36,7 @@ Mempelajari dasar pengembangan aplikasi mobile menggunakan Flutter
 ### Mini Assignment
 
 menambahkan NIM dan nama kampus
-![screenshot](screenshoot/nim-kampus.jpg)
+![screenshot](screenshoot/nim-kampus.jpgww)
 
 #### Refleksi
 
