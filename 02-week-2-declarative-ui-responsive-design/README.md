@@ -3,7 +3,7 @@
 | NIM |  244107020027|
 | Nama |  Muhammad Rayhan Zamzami |
 | Kelas | TI - 3G |
-| Repository | [link] (https://github.com/mrayhanz/244107020027-mobile-course/tree/main/01-week-1-mobile-development-ecosystem-flutter-refresh) |
+| Repository | [link] (https://github.com/mrayhanz/244107020027-mobile-course/tree/main/02-week-2-declarative-ui-responsive-design) |
 
 # WEEK 2
 ## Declarative UI & Responsive Design
@@ -168,7 +168,7 @@ const double kWideBreakpoint = 700;
 1. Apa perbedaan cara berpikir imperative dan declarative saat membangun UI?
     
     Imperative menjelaskan langkah-langkah untuk membuat UI, sedangkan declarative menjelaskan hasil UI yang diinginkan berdasarkan kondisi.
-
+x
 2. Kapan Expanded membantu dan kapan penggunaannya justru menghasilkan layout error?
     
     Membantu membagi ruang yang tersedia dalam Row atau Column. Bisa error jika child memiliki ukuran yang dipaksakan terlalu besar atau constraint parent tidak sesuai.
