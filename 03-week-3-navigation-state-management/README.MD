@@ -41,7 +41,7 @@ Saat klik tombol muat ulang di dalam aplikasi maka akan terload kembali barang y
 
 **Refleksi**
 
-    Hal ini berkaitan dengan User Experience (UX). Menampilkan halaman kosong dengan indikator loading yang besar dapat mengganggu kenyamanan pengguna karena membuat mereka kehilangan konteks dari informasi yang sedang dilihat. Sebaliknya, mempertahankan data yang sudah ditampilkan dan hanya menambahkan indikator loading kecil memungkinkan pengguna tetap membaca atau menggunakan konten sebelumnya sambil aplikasi memproses dan mengambil data terbaru.
+Hal ini berkaitan dengan User Experience (UX). Menampilkan halaman kosong dengan indikator loading yang besar dapat mengganggu kenyamanan pengguna karena membuat mereka kehilangan konteks dari informasi yang sedang dilihat. Sebaliknya, mempertahankan data yang sudah ditampilkan dan hanya menambahkan indikator loading kecil memungkinkan pengguna tetap membaca atau menggunakan konten sebelumnya sambil aplikasi memproses dan mengambil data terbaru.
 
 ### AI CHALLENGE
 
