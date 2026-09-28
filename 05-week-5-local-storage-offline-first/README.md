@@ -193,3 +193,13 @@ class NoteRepository {
   }
 }
 ```
+
+### HASIL TEST & ANALYZE
+
+![screenshots](screenshots/flutter-test.png)
+
+
+### HASIL APLIKASI
+
+
+
