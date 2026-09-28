@@ -201,5 +201,16 @@ class NoteRepository {
 
 ### HASIL APLIKASI
 
+![screenshots](screenshots/hasil.png)
 
+### REFLEKSI 
+
+1. Mengapa daftar catatan tidak boleh disimpan di SharedPreferences?
+  Karena SharedPreferences lebih cocok untuk menyimpan data kecil seperti pengaturan atau status sederhana. Kalau daftar catatan disimpan di sana, pengelolaan data jadi tidak efisien dan sulit ketika jumlah catatan bertambah. Database SQLite lebih cocok karena data catatan bisa dicari, diubah, dan dihapus dengan lebih terstruktur.
+2. Kapan cache-first cukup, dan kapan membutuhkan strategi lain?
+  Cache-first cukup untuk data yang tidak harus selalu terbaru, misalnya catatan offline. Data dari penyimpanan lokal ditampilkan terlebih dahulu sehingga aplikasi tetap bisa digunakan tanpa internet. Untuk data yang harus selalu terbaru, seperti harga real-time, lebih cocok menggunakan network-first agar aplikasi mengambil data terbaru dari server.
+3. Bagaimana dirty flag menjadi antrean sync tanpa memblokir UI? Kapan outbox diperlukan?
+  Setiap catatan yang diubah secara offline diberi dirty = true. Saat ada koneksi, aplikasi mencari catatan yang dirty lalu melakukan sinkronisasi secara asynchronous sehingga UI tetap bisa digunakan. Tabel outbox diperlukan ketika operasi sync semakin kompleks, misalnya ada banyak jenis perubahan, urutan operasi harus dijaga, atau setiap perubahan perlu dicatat dan dicoba ulang secara terpisah.
+4. Bagian mana dari rekomendasi AI yang ditolak, dan mengapa?
+  Saya menolak rekomendasi untuk menyimpan seluruh daftar catatan di SharedPreferences karena tidak sesuai untuk data yang jumlahnya bisa bertambah dan membutuhkan operasi CRUD. Saya memilih SQLite agar penyimpanan catatan lebih terstruktur dan sesuai dengan kebutuhan aplikasi offline-first.
 
