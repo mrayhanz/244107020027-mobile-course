@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AnnouncementPage extends StatelessWidget {
-  const AnnouncementPage({super.key, required this.id});
   final String id;
+
+  const AnnouncementPage({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Pengumuman $id')),
-      body: Center(child: Text('Isi pengumuman $id')),
-    );
+    return const Scaffold(); // Layar putih kosong
   }
 }

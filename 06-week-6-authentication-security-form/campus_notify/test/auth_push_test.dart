@@ -1,10 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-String routeFromMessage(Map<String, String> data) {
-  final route = data['route'] ?? '/';
-  return route.startsWith('/') ? route : '/$route';
-}
+// Kita import fungsi murni yang baru saja kita buat di routes.dart
+import 'package:campus_notify/routes.dart'; 
 
 class FakeTokenStore {
   String? access;

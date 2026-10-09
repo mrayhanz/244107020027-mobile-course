@@ -1,18 +1,10 @@
 class AppRoutes {
-  AppRoutes._();
+  static const String home = '/';
+  static const String login = '/login';
+  static const String announcement = '/pengumuman/:id';
+}
 
-  static const login = '/login';
-  static const home = '/';
-
-  /// Pola untuk GoRouter.
-  static const announcementPattern = '/pengumuman/:id';
-
-  /// Path nyata untuk navigasi dan deep link FCM.
-  static String announcement(String id) => '/pengumuman/$id';
-
-  static final _announcementPath = RegExp(r'^/pengumuman/[A-Za-z0-9_-]+$');
-
-  /// Hanya rute yang dikenal yang boleh dibuka dari notifikasi.
-  static bool isDeepLinkAllowed(String route) =>
-      route == home || _announcementPath.hasMatch(route);
+String routeFromMessage(Map<String, dynamic> data) {
+  final route = data['route']?.toString() ?? '/';
+  return route.startsWith('/') ? route : '/$route';
 }

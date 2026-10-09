@@ -1,7 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core_provider.dart';
+import '../data/token_store.dart';
+import '../data/auth_repository.dart';
 
+// Deklarasi provider dasar agar TokenStore dan AuthRepository terbaca oleh Riverpod
+final tokenStoreProvider = Provider((ref) => TokenStore());
+final authRepositoryProvider = Provider((ref) => AuthRepository());
+
+// Kode utama persis sesuai jobsheet
 final authStateProvider = AsyncNotifierProvider<AuthNotifier, bool>(
   AuthNotifier.new,
 );

@@ -1,70 +1,75 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'data/api_client.dart';
-import 'messaging/push_service.dart';
-import 'pages/announcement_page.dart';
-import 'pages/home_page.dart';
-import 'pages/login_page.dart';
+// Import Praktikum 1
 import 'providers/auth_provider.dart';
-import 'providers/core_provider.dart';
+import 'pages/login_page.dart';
+import 'pages/home_page.dart';
+import 'pages/announcement_page.dart';
 
-import 'routes.dart';
+// Import Praktikum 2 & 3
+import 'messaging/push_service.dart';
 
 final container = ProviderContainer();
 
+// Konfigurasi Navigasi
 final router = GoRouter(
   redirect: (context, state) {
     final loggedIn = container.read(authStateProvider).value ?? false;
-    final goingLogin = state.matchedLocation == AppRoutes.login;
-    if (!loggedIn && !goingLogin) return AppRoutes.login;
-    if (loggedIn && goingLogin) return AppRoutes.home;
+    final goingLogin = state.matchedLocation == '/login';
+
+    if (!loggedIn && !goingLogin) return '/login';
+    if (loggedIn && goingLogin) return '/';
     return null;
   },
   routes: [
-    GoRoute(path: AppRoutes.login, builder: (_, _) => const LoginPage()),
-    GoRoute(path: AppRoutes.home, builder: (_, _) => const HomePage()),
+    GoRoute(path: '/login', builder: (_, _) => const LoginPage()),
+    GoRoute(path: '/', builder: (_, _) => const HomePage()),
     GoRoute(
-      path: AppRoutes.announcementPattern,
+      path: '/pengumuman/:id',
       builder: (_, s) => AnnouncementPage(id: s.pathParameters['id'] ?? ''),
     ),
   ],
 );
 
-Future<void> main() async {
+void main() async {
+  // Syarat Wajib sebelum inisialisasi Firebase
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  final dio = buildApiClient(
-    container.read(tokenStoreProvider),
-    container.read(authRepositoryProvider),
+  // Daftarkan Background Handler (Praktikum 3)
+  registerBackgroundHandler();
+
+  // Inisialisasi Notifikasi (Praktikum 2)
+  await requestNotificationPermission();
+  await initLocalNotifications();
+
+  // Ambil Token FCM (Praktikum 2)
+  await initFcmToken(
+    onToken: (token) async {
+      debugPrint('FCM Token: $token');
+    },
   );
 
-  final push = PushService(
-    onNavigate: (route) => router.go(route),
-    // Tanpa try/catch: error harus sampai ke PushService supaya bisa diulang.
-    onToken: (token) => dio.post(
-      '/devices',
-      data: {'fcm_token': token, 'platform': defaultTargetPlatform.name},
-    ),
-  );
-  await push.init();
+  // Navigasi saat Notifikasi Diklik (Praktikum 3)
+  listenForeground((route) => router.go(route));
+  await handleTerminated((route) => router.go(route));
 
-  // Kirim ulang token yang tertunda begitu user berhasil login.
-  container.listen(authStateProvider, (_, next) {
-    if (next.value == true) push.flushPendingToken();
-  });
+  // Jalankan Aplikasi
+  runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
+}
 
-  runApp(
-    UncontrolledProviderScope(
-      container: container,
-      child: MaterialApp.router(routerConfig: router),
-    ),
-  );
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-  await container.read(authStateProvider.future);
-  await push.handleInitialMessage();
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Campus Notify',
+      debugShowCheckedModeBanner: false,
+      routerConfig: router,
+    );
+  }
 }

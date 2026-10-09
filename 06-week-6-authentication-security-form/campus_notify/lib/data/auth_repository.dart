@@ -1,16 +1,10 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 class AuthSession {
   const AuthSession({required this.access, required this.refresh});
   final String access;
   final String refresh;
 }
 
-final authRepositoryProvider = Provider((ref) => AuthRepository());
-
 class AuthRepository {
-  // GANTI titik ini dengan FirebaseAuth.instance.signInWithEmailAndPassword
-  // atau GoogleSignIn saat backend Firebase sudah siap.
   Future<AuthSession> login({
     required String email,
     required String password,

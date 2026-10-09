@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../messaging/push_service.dart';
 import '../providers/auth_provider.dart';
 
 class HomePage extends ConsumerWidget {
@@ -12,33 +11,56 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Campus Notify'),
+        title: const Text('Week 6 Project'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            tooltip: 'Keluar',
             onPressed: () async {
               await ref.read(authStateProvider.notifier).logout();
               if (context.mounted) context.go('/login');
             },
+            icon: const Icon(Icons.logout_rounded),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Debug', style: TextStyle(fontWeight: FontWeight.bold)),
-            ValueListenableBuilder<String?>(
-              valueListenable: fcmTokenPreview,
-              builder: (_, token, _) => Text('FCM token: ${token ?? "-"}'),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 72,
+                  height: 72,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.verified_user_outlined,
+                    size: 36,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Anda berhasil masuk',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Sesi autentikasi Anda sudah aktif.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () => context.go('/pengumuman/1'),
-              child: const Text('Buka pengumuman 1'),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -1,11 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final tokenStoreProvider = Provider((ref) => TokenStore());
 
 class TokenStore {
   TokenStore({FlutterSecureStorage? storage})
-      : _storage = storage ?? const FlutterSecureStorage();
+    : _storage = storage ?? const FlutterSecureStorage();
 
   final FlutterSecureStorage _storage;
   static const _accessKey = 'access_token';
