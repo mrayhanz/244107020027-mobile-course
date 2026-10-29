@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../data/datasources/token_store.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -38,10 +39,7 @@ class AuthNotifier extends AsyncNotifier<bool> {
         throw Exception(result.failure!.message);
       }
       final session = result.session!;
-      await repo.saveTokens(
-        access: session.access,
-        refresh: session.refresh,
-      );
+      await repo.saveTokens(access: session.access, refresh: session.refresh);
       return true;
     });
   }

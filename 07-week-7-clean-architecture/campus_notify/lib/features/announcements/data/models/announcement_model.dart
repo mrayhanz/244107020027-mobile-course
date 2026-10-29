@@ -13,7 +13,8 @@ class AnnouncementModel extends Announcement {
       id: json['id'] as String? ?? '',
       title: json['title'] as String? ?? '',
       content: json['content'] as String? ?? '',
-      createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(json['created_at'] as String? ?? '') ??
           DateTime.fromMillisecondsSinceEpoch(0),
     );
   }

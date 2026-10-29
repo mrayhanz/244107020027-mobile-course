@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../domain/entities/note.dart';
 import '../providers/notes_providers.dart';
 
@@ -59,8 +60,7 @@ class NotesPage extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: state.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => ErrorView(
           message: '$e',
           onRetry: () => ref.invalidate(notesProvider),
@@ -74,11 +74,7 @@ class NotesPage extends ConsumerWidget {
 }
 
 class ErrorView extends StatelessWidget {
-  const ErrorView({
-    super.key,
-    required this.message,
-    required this.onRetry,
-  });
+  const ErrorView({super.key, required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;
@@ -91,10 +87,7 @@ class ErrorView extends StatelessWidget {
         children: [
           Text(message),
           const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: onRetry,
-            child: const Text('Coba Lagi'),
-          ),
+          ElevatedButton(onPressed: onRetry, child: const Text('Coba Lagi')),
         ],
       ),
     );
