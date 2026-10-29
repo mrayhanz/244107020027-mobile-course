@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 // Kita import fungsi murni yang baru saja kita buat di routes.dart
-import 'package:campus_notify/routes.dart'; 
+import 'package:campus_notify/routes.dart';
 
 class FakeTokenStore {
   String? access;

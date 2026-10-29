@@ -34,7 +34,7 @@
 
 1. Buka PR kecil
 
-![screenshot](../screenshots/PR-kecil.png)
+![screenshot](../screenshots/PR-Kecil.png)
 
 2. Review sejawat
 
@@ -66,10 +66,6 @@
 - [x] PR kecil + commit message konvensional jelas
 - [x] README + screenshot + panduan menjalankan lengkap
 - [x] Semua komentar peer review sudah ditindaklanjuti
-
-### AI Challenge
-
-![screenshot](../screenshots/ci.png)
 
 ### Refleksi
 

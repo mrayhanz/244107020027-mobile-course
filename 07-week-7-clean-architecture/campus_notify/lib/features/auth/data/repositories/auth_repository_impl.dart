@@ -6,8 +6,8 @@ import '../models/auth_session_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required TokenStore tokenStore})
-      // ignore: prefer_initializing_formals
-      : _tokenStore = tokenStore;
+    // ignore: prefer_initializing_formals
+    : _tokenStore = tokenStore;
 
   final TokenStore _tokenStore;
 
