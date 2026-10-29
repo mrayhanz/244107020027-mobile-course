@@ -5,7 +5,8 @@ import '../models/announcement_model.dart';
 
 class AnnouncementRepositoryImpl implements AnnouncementRepository {
   @override
-  Future<({List<Announcement> announcements, Failure? failure})> getAnnouncements() async {
+  Future<({List<Announcement> announcements, Failure? failure})>
+  getAnnouncements() async {
     try {
       final items = [
         AnnouncementModel(
@@ -15,7 +16,10 @@ class AnnouncementRepositoryImpl implements AnnouncementRepository {
           createdAt: DateTime.now(),
         ),
       ];
-      return (announcements: items.map((e) => e.toEntity()).toList(), failure: null);
+      return (
+        announcements: items.map((e) => e.toEntity()).toList(),
+        failure: null,
+      );
     } catch (e) {
       return (
         announcements: const <Announcement>[],
@@ -25,7 +29,9 @@ class AnnouncementRepositoryImpl implements AnnouncementRepository {
   }
 
   @override
-  Future<({Announcement? announcement, Failure? failure})> getAnnouncementById(String id) async {
+  Future<({Announcement? announcement, Failure? failure})> getAnnouncementById(
+    String id,
+  ) async {
     try {
       final model = AnnouncementModel(
         id: id,

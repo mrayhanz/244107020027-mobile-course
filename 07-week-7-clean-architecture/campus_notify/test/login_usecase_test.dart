@@ -32,12 +32,17 @@ class FakeAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<({String? token, Failure? failure})> refresh(String refreshToken) async {
+  Future<({String? token, Failure? failure})> refresh(
+    String refreshToken,
+  ) async {
     return (token: 'refreshed-token', failure: null);
   }
 
   @override
-  Future<void> saveTokens({required String access, required String refresh}) async {
+  Future<void> saveTokens({
+    required String access,
+    required String refresh,
+  }) async {
     savedAccess = access;
     savedRefresh = refresh;
   }
@@ -57,11 +62,17 @@ void main() {
     final repo = FakeAuthRepository();
     final useCase = LoginUseCase(repo);
 
-    final resInvalidEmail = await useCase(email: 'invalidemail', password: 'password123');
+    final resInvalidEmail = await useCase(
+      email: 'invalidemail',
+      password: 'password123',
+    );
     expect(resInvalidEmail.failure, isA<LocalFailure>());
     expect(resInvalidEmail.session, isNull);
 
-    final resShortPass = await useCase(email: 'test@example.com', password: '123');
+    final resShortPass = await useCase(
+      email: 'test@example.com',
+      password: '123',
+    );
     expect(resShortPass.failure, isA<LocalFailure>());
     expect(resShortPass.session, isNull);
   });
@@ -70,18 +81,27 @@ void main() {
     final repo = FakeAuthRepository();
     final useCase = LoginUseCase(repo);
 
-    final res = await useCase(email: 'user@example.com', password: 'password123');
+    final res = await useCase(
+      email: 'user@example.com',
+      password: 'password123',
+    );
     expect(res.failure, isNull);
     expect(res.session, isNotNull);
     expect(res.session!.access, 'mock-access-user@example.com');
   });
 
-  test('LoginUseCase meneruskan failure dari repository ketika jaringan error', () async {
-    final repo = FakeAuthRepository(fail: true);
-    final useCase = LoginUseCase(repo);
+  test(
+    'LoginUseCase meneruskan failure dari repository ketika jaringan error',
+    () async {
+      final repo = FakeAuthRepository(fail: true);
+      final useCase = LoginUseCase(repo);
 
-    final res = await useCase(email: 'user@example.com', password: 'password123');
-    expect(res.failure, isA<NetworkFailure>());
-    expect(res.session, isNull);
-  });
+      final res = await useCase(
+        email: 'user@example.com',
+        password: 'password123',
+      );
+      expect(res.failure, isA<NetworkFailure>());
+      expect(res.session, isNull);
+    },
+  );
 }

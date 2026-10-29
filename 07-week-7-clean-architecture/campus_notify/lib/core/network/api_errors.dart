@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 
 String getFriendlyErrorMessage(DioException e) {
-  if (e.type == DioExceptionType.connectionTimeout || 
-      e.type == DioExceptionType.receiveTimeout || 
+  if (e.type == DioExceptionType.connectionTimeout ||
+      e.type == DioExceptionType.receiveTimeout ||
       e.type == DioExceptionType.connectionError) {
     return 'Koneksi terputus. Silakan periksa koneksi internet Anda.';
   }
-  
+
   if (e.response != null) {
     if (e.response?.statusCode == 401) {
       return 'Sesi Anda telah berakhir. Silakan login kembali.';
