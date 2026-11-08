@@ -118,7 +118,7 @@ Output lengkap: [`docs/benchmark-output.txt`](docs/benchmark-output.txt)
 
 | Testing & Analyze | Halaman Catatan | Feed Pengumuman |
 |:---:|:---:|:---:|
-| ![Testing](screenshots/testing.png) | ![Notes](screenshots/notes-page.png) | ![Announcements](screenshots/announcements-page.png) |
+| ![Testing](screenshots/testing.png) | ![Notes](screenshots/notes-page.jpg) | ![Announcements](screenshots/announcements-page.jpg) |
 
 ---
 
