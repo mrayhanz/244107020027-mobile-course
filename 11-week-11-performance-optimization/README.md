@@ -1,9 +1,9 @@
-|            | Pemrograman Mobile                                                                                                |
-| ---------- | ----------------------------------------------------------------------------------------------------------------- |
-| NIM        | 244107020027                                                                                                      |
-| Nama       | Muhammad Rayhan Zamzami                                                                                           |
-| Kelas      | TI - 3G                                                                                                           |
-| Repository | [link](https://github.com/mrayhanz/244107020027-mobile-course/tree/main/11-week-11-performance-optimization)       |
+|            | Pemrograman Mobile                                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------------------ |
+| NIM        | 244107020027                                                                                                 |
+| Nama       | Muhammad Rayhan Zamzami                                                                                      |
+| Kelas      | TI - 3G                                                                                                      |
+| Repository | [link](https://github.com/mrayhanz/244107020027-mobile-course/tree/main/11-week-11-performance-optimization) |
 
 # WEEK 11 — Performance Optimization
 
@@ -19,44 +19,44 @@ Profiling dilakukan dengan `flutter run --profile` + Flutter DevTools (Performan
 
 Skenario: buka daftar catatan, ketik pencarian cepat, buka feed pengumuman, scroll cepat, buka-tutup halaman berulang.
 
-| Metrik Baseline | Nilai |
-|---|---:|
-| Widget dibangun untuk list 1.000 item | 1.000 build |
-| Update state untuk 50 ketikan | 50 rebuild |
-| Latensi fetch pengumuman pertama | 313 ms |
-| Frame time rata-rata | ~34,2 ms (jank) |
-| Jank frames (> 16,6 ms) | 28 frame |
-| Pemakaian memori puncak | ~84,6 MB |
+| Metrik Baseline                       |           Nilai |
+| ------------------------------------- | --------------: |
+| Widget dibangun untuk list 1.000 item |     1.000 build |
+| Update state untuk 50 ketikan         |      50 rebuild |
+| Latensi fetch pengumuman pertama      |          313 ms |
+| Frame time rata-rata                  | ~34,2 ms (jank) |
+| Jank frames (> 16,6 ms)               |        28 frame |
+| Pemakaian memori puncak               |        ~84,6 MB |
 
 Temuan lengkap: [`docs/performance-findings.md`](docs/performance-findings.md)
 
 #### 2. Optimasi yang Diterapkan
 
-| No | Teknik Optimasi | File | Alasan |
-|:---:|---|---|---|
-| 1 | `const` constructor + ekstraksi widget (`_HomeHero`, `_HomeActions`, `_HomeActionButton`) | `home_page.dart` | Widget statis tidak ikut rebuild saat parent berubah |
-| 2 | Riverpod `select((q) => q.isNotEmpty)` | `notes_page.dart` | Header search hanya rebuild saat tombol clear berubah, bukan tiap karakter |
-| 3 | `Debouncer` 250 ms pada query | `core/performance/debouncer.dart`, `notes_providers.dart` | 50 ketikan -> 1 eksekusi filter |
-| 4 | Pemisahan `NotesPage` (stateless) dan `_NotesBody` (consumer) | `notes_page.dart` | Scaffold/AppBar tidak rebuild saat data/query berubah |
-| 5 | `ListView.builder` + `RepaintBoundary` per tile | `notes_page.dart`, `announcements_page.dart` | Hanya item viewport yang di-build; repaint terisolasi |
-| 6 | Pagination / infinite scroll per 10 item | `announcements_page.dart` | First paint lebih cepat, layout list panjang lebih ringan |
-| 7 | `CachedNetworkImage` + `memCacheWidth: 600`, `memCacheHeight: 320` | `announcements_page.dart` | Hemat memori native + cache disk, tidak download ulang |
-| 8 | `StaleCache` (stale-while-revalidate) | `core/performance/stale_cache.dart`, `announcement_repository_impl.dart` | Cache hit instan + fallback offline |
-| 9 | `RetryInterceptor` Dio (backoff 1s/2s/4s) | `core/network/retry_interceptor.dart` | Request transient error tidak langsung gagal |
-| 10 | `dispose()` controller/listener + guard `mounted` | `notes_page.dart`, `announcements_page.dart` | Mencegah memory leak saat navigasi berulang |
+| No  | Teknik Optimasi                                                                           | File                                                                     | Alasan                                                                     |
+| :-: | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+|  1  | `const` constructor + ekstraksi widget (`_HomeHero`, `_HomeActions`, `_HomeActionButton`) | `home_page.dart`                                                         | Widget statis tidak ikut rebuild saat parent berubah                       |
+|  2  | Riverpod `select((q) => q.isNotEmpty)`                                                    | `notes_page.dart`                                                        | Header search hanya rebuild saat tombol clear berubah, bukan tiap karakter |
+|  3  | `Debouncer` 250 ms pada query                                                             | `core/performance/debouncer.dart`, `notes_providers.dart`                | 50 ketikan -> 1 eksekusi filter                                            |
+|  4  | Pemisahan `NotesPage` (stateless) dan `_NotesBody` (consumer)                             | `notes_page.dart`                                                        | Scaffold/AppBar tidak rebuild saat data/query berubah                      |
+|  5  | `ListView.builder` + `RepaintBoundary` per tile                                           | `notes_page.dart`, `announcements_page.dart`                             | Hanya item viewport yang di-build; repaint terisolasi                      |
+|  6  | Pagination / infinite scroll per 10 item                                                  | `announcements_page.dart`                                                | First paint lebih cepat, layout list panjang lebih ringan                  |
+|  7  | `CachedNetworkImage` + `memCacheWidth: 600`, `memCacheHeight: 320`                        | `announcements_page.dart`                                                | Hemat memori native + cache disk, tidak download ulang                     |
+|  8  | `StaleCache` (stale-while-revalidate)                                                     | `core/performance/stale_cache.dart`, `announcement_repository_impl.dart` | Cache hit instan + fallback offline                                        |
+|  9  | `RetryInterceptor` Dio (backoff 1s/2s/4s)                                                 | `core/network/retry_interceptor.dart`                                    | Request transient error tidak langsung gagal                               |
+| 10  | `dispose()` controller/listener + guard `mounted`                                         | `notes_page.dart`, `announcements_page.dart`                             | Mencegah memory leak saat navigasi berulang                                |
 
 Detail implementasi + trade-off: [`docs/performance-report.md`](docs/performance-report.md)
 
 #### 3. Hasil Verifikasi
 
-| Metrik | Baseline | After | Perubahan |
-|---|---:|---:|---:|
-| Widget dibangun (list 1.000 item) | 1.000 | **18** | **-98,2%** |
-| Update state (50 ketikan) | 50 | **1** | **-98%** |
-| Latensi cache hit | — | **0 ms** | instan |
-| Frame time rata-rata | ~34,2 ms | **~7,8 ms** | **-77%** |
-| Jank frames | 28 | **0** | **-100%** |
-| Memori puncak | ~84,6 MB | **~42,1 MB** | **-50%** |
+| Metrik                            | Baseline |        After |  Perubahan |
+| --------------------------------- | -------: | -----------: | ---------: |
+| Widget dibangun (list 1.000 item) |    1.000 |       **18** | **-98,2%** |
+| Update state (50 ketikan)         |       50 |        **1** |   **-98%** |
+| Latensi cache hit                 |        — |     **0 ms** |     instan |
+| Frame time rata-rata              | ~34,2 ms |  **~7,8 ms** |   **-77%** |
+| Jank frames                       |       28 |        **0** |  **-100%** |
+| Memori puncak                     | ~84,6 MB | **~42,1 MB** |   **-50%** |
 
 ![Before Profile](screenshots/before-profile.png)
 ![After Profile](screenshots/after-profile.png)
@@ -116,22 +116,22 @@ Output lengkap: [`docs/benchmark-output.txt`](docs/benchmark-output.txt)
 
 #### 3. Bukti Screenshot
 
-| Testing & Analyze | Halaman Catatan | Feed Pengumuman |
-|:---:|:---:|:---:|
-| ![Testing](screenshots/testing.png) | ![Notes](screenshots/notes-page.png) | ![Announcements](screenshots/announcements-page.png) |
+|          Testing & Analyze          |           Halaman Catatan            |                   Feed Pengumuman                    |
+| :---------------------------------: | :----------------------------------: | :--------------------------------------------------: |
+| ![Testing](screenshots/testing.png) | ![Notes](screenshots/notes-page.jpg) | ![Announcements](screenshots/announcements-page.jpg) |
 
 ---
 
 ### TABEL RISIKO & MITIGASI
 
-| Kategori Risiko | Potensi Masalah | Mitigasi Teknis |
-|---|---|---|
+| Kategori Risiko        | Potensi Masalah                                 | Mitigasi Teknis                                                                |
+| ---------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------ |
 | **Regresi Fungsional** | Optimasi mengubah perilaku pencarian/pagination | 23 automated test + benchmark guard (`lazyBuilt < eagerBuilt`, `updates == 1`) |
-| **Data Stale** | Cache menampilkan data lama | TTL 5 menit + fallback ke cache hanya saat fetch gagal |
-| **Memory Leak** | Controller/listener tertinggal saat navigasi | `dispose()`, `removeListener()`, `ref.onDispose()`, guard `mounted` |
-| **Request Storm** | Infinite scroll memicu request berulang | Guard `_isLoading`, `_hasMore`, dan threshold scroll |
-| **Kualitas Gambar** | Thumbnail terlihat pecah di layar high-DPI | `memCacheWidth/Height` disesuaikan ukuran tampil (600x320) |
-| **Over-optimization** | Kompleksitas kode naik tanpa dampak | Setiap optimasi diverifikasi dengan benchmark/DevTools sebelum dipertahankan |
+| **Data Stale**         | Cache menampilkan data lama                     | TTL 5 menit + fallback ke cache hanya saat fetch gagal                         |
+| **Memory Leak**        | Controller/listener tertinggal saat navigasi    | `dispose()`, `removeListener()`, `ref.onDispose()`, guard `mounted`            |
+| **Request Storm**      | Infinite scroll memicu request berulang         | Guard `_isLoading`, `_hasMore`, dan threshold scroll                           |
+| **Kualitas Gambar**    | Thumbnail terlihat pecah di layar high-DPI      | `memCacheWidth/Height` disesuaikan ukuran tampil (600x320)                     |
+| **Over-optimization**  | Kompleksitas kode naik tanpa dampak             | Setiap optimasi diverifikasi dengan benchmark/DevTools sebelum dipertahankan   |
 
 ---
 
